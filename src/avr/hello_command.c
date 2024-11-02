@@ -11,4 +11,4 @@ command_hello_response(uint32_t *args)
 {
     sendf("hello_response value=%s", "A0");
 }
-DECL_COMMAND_FLAGS(command_hello_response, "hello_response", 0);
+DECL_COMMAND(command_hello_response, "hello_response");
