@@ -9,6 +9,7 @@
 void
 command_hello_response(uint32_t *args)
 {
-    sendf("hello_response value=%s", "A0");
+    uint8_t oid = args[0];
+    sendf("hello_response oid=%c value=%s", oid, "A0");
 }
-DECL_COMMAND(command_hello_response, "hello_response");
+DECL_COMMAND(command_hello_response, "hello_response oid=%c");

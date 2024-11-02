@@ -14,11 +14,13 @@ class HelloWorld:
         self.mcu = self.printer.lookup_object('mcu')
 
     def cmd_HELLO(self, gcmd):
+        oid = self.mcu.create_oid()
         # Send command to MCU
         params = self.mcu.lookup_query_command(
-            "hello_world",
-            "hello_response value=%s"
-        ).send()
+        "hello_response",
+        "hello_response oid=%c value=%s",
+        oid=oid
+    ).send([oid])
         # Respond to user
         gcmd.respond_info(params['value'])
 
