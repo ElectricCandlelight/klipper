@@ -14,11 +14,13 @@ class HelloWorld:
     def cmd_HELLO(self, gcmd):
         oid = self.mcu.create_oid()
         params = self.mcu.lookup_query_command(
-            "hello oid=%c",  # Must match DECL_COMMAND format exactly
+            "hello oid=%c",
             "hello_response oid=%c msg=%s",
             oid=oid
         ).send([oid])
-        gcmd.respond_info(params['msg'])
+        # Convert bytes to string before responding
+        msg = params['msg'].decode('utf-8')
+        gcmd.respond_info(msg)
 
 def load_config(config):
     return HelloWorld(config)
