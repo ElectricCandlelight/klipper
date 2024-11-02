@@ -7,9 +7,9 @@
 #include "sched.h"   // For sched_read_time()
 
 void
-command_hello_response(uint32_t *args)
+command_hello(uint32_t *args)
 {
     uint8_t oid = args[0];
-    sendf("hello_response oid=%c value=%s", oid, "A0");
+    sendf("hello_response oid=%c msg=%s", oid, "world");
 }
-DECL_COMMAND(command_hello_response, "hello_response oid=%c");
+DECL_COMMAND(command_hello, "hello oid=%c");

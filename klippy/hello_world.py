@@ -12,17 +12,17 @@ class HelloWorld:
         self.gcode.register_command('HELLO', self.cmd_HELLO, desc="Sends HELLO command to MCU")
         # Setup MCU
         self.mcu = self.printer.lookup_object('mcu')
-
+        
     def cmd_HELLO(self, gcmd):
         oid = self.mcu.create_oid()
         # Send command to MCU
         params = self.mcu.lookup_query_command(
-        "hello_response",
-        "hello_response oid=%c value=%s",
-        oid=oid
-    ).send([oid])
-        # Respond to user
-        gcmd.respond_info(params['value'])
+            "hello",
+            "hello_response oid=%c msg=%s",
+            oid=oid
+        ).send([oid])
+        # Respond to user 
+        gcmd.respond_info(params['msg'])
 
 def load_config(config):
     return HelloWorld(config)
