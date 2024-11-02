@@ -3,8 +3,8 @@
 // Copyright (C) 2024 <Your Name>
 // This file may be distributed under the terms of the GNU GPLv3 license.
 
-#include "command.h" // For DECL_COMMAND_FLAGS
-#include "sched.h"   // For sched_read_time()
+#include "command.h"
+#include "sched.h"
 
 void
 command_hello(uint32_t *args)
