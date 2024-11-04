@@ -19,7 +19,6 @@ class Uart3Monitor:
         # Log to klippy.log
         logging.warning("UART3 received: %s", message)
         # Display in Mainsail console correctly
-        self.printer.get_reactor().process_message("UART3: " + message)
 
 def load_config(config):
     return Uart3Monitor(config)
