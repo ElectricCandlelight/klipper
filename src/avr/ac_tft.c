@@ -9,6 +9,7 @@
 #include "autoconf.h" // CONFIG_CLOCK_FREQ
 
 #define UART3_BAUD 115200
+#define UART_BUF_SIZE 64
 
 void
 uart3_init(void)
@@ -25,12 +26,23 @@ uart3_init(void)
 }
 DECL_INIT(uart3_init);
 
+static char uart_buf[UART_BUF_SIZE];
+static uint8_t buf_pos;
+
 // Interrupt handler for UART3 receive
 ISR(USART3_RX_vect) 
 {
-    // Read the received byte
     uint8_t data = UDR3;
-    sendf("uart3_rx byte=%c", data);
+    
+    if (buf_pos < UART_BUF_SIZE-1) {
+        uart_buf[buf_pos++] = data;
+    }
+    
+    if (data == '\n' || buf_pos >= UART_BUF_SIZE-1) {
+        uart_buf[buf_pos] = '\0';
+        sendf("uart3_rx msg=%s", uart_buf);
+        buf_pos = 0;
+    }
 }
 
 // Register uart3_rx response
