@@ -23,6 +23,7 @@ class HelloWorld:
         # Convert bytes to string before responding
         msg = params['msg'].decode('utf-8')
         gcmd.respond_info(msg)
+        logging.warning("Starting hello %s", msg) # Log to klippy.log
 
 def load_config(config):
     return HelloWorld(config)
