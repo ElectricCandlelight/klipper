@@ -15,12 +15,10 @@ class Uart3Monitor:
         logging.warning("Starting UART3 monitor") # Log to klippy.log
         
     def _handle_uart3_rx(self, params):
-            debuglevel = logging.INFO
-            logging.getLogger().setLevel(debuglevel)
-            logging.info("new message received") # Debug print
+            logging.warning("new message received") # Debug print
             message = params['msg'].decode('utf-8').strip()
             # Log to klippy.log
-            logging.info("UART3: %s", message)
+            logging.warning("UART3: %s", message)
             # Display in Mainsail console using reactor
 
 def load_config(config):
