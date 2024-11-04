@@ -13,12 +13,15 @@ class Uart3Monitor:
         self.mcu.register_response(self._handle_uart3_rx, "uart3_rx msg=%s")
         # Set up logging
         self.gcode = self.printer.lookup_object('gcode')
+        # Get logger instance
+        self.logger = logging.getLogger("uart3_monitor")
+        self.logger.setLevel(logging.INFO)
         
     def _handle_uart3_rx(self, params):
         # Convert bytes to string and strip CR/LF
-        message = params['msg'].strip()
-        # Log using Klipper's logging system
-        logging.info("UART3: %s", message)
+        message = params['msg'].decode('utf-8').strip()
+        # Log using specific logger
+        self.logger.info("UART3: %s", message)
         # Also display in console
         self.gcode.respond_info("UART3: %s" % message)
 
