@@ -7,7 +7,7 @@ class Uart3Monitor:
         
     def _handle_uart3_rx(self, params):
         # Get byte from response
-        byte = params['byte']
+        byte = params['byte'].decode('utf-8')
         # Log to console
         self.printer.get_reactor().process_message("uart3_rx: " + byte)
 
