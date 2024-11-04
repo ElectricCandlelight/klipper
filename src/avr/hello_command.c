@@ -5,9 +5,9 @@
 
 #include "command.h"
 #include "sched.h"
+#include <avr/io.h>
 
-void
-command_hello(uint32_t *args)
+void command_hello(uint32_t *args)
 {
     uint8_t oid = args[0];
     sendf("hello_response oid=%c msg=%s", oid, "world");

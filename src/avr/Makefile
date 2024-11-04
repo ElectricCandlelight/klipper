@@ -10,6 +10,7 @@ CFLAGS += -mmcu=$(CONFIG_MCU)
 # Add avr source files
 src-y += avr/main.c avr/timer.c
 src-y += avr/hello_command.c
+src-y += avr/ac_tft.c
 src-$(CONFIG_HAVE_GPIO) += avr/gpio.c
 src-$(CONFIG_HAVE_GPIO_ADC) += avr/adc.c
 src-$(CONFIG_HAVE_GPIO_SPI) += avr/spi.c
