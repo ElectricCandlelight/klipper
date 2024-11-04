@@ -9,17 +9,17 @@ class Uart3Monitor:
     def __init__(self, config):
         self.printer = config.get_printer()
         self.mcu = self.printer.lookup_object('mcu')
-        self.mcu.register_response(self._handle_uart3_rx, "uart3_rx msg=%s")
-        # Get base logger used by Klipper
-        print("UART3Monitor initialized") # Debug print
-        logging.warning("Starting UART3 monitor") # Log to klippy.log
+        # Simple response registration - no OID needed
+        self.mcu.register_response(self._handle_uart3_rx, "uart3_rx")
+        logging.warning("UART3Monitor initialized")
         
     def _handle_uart3_rx(self, params):
-            logging.warning("new message received") # Debug print
-            message = params['msg'].decode('utf-8').strip()
-            # Log to klippy.log
-            logging.warning("UART3: %s", message)
-            # Display in Mainsail console using reactor
+        logging.warning("Made it to _handle_uart3_rx")
+        message = params['msg'].decode('utf-8').strip()
+        # Log to klippy.log
+        logging.warning("UART3 received: %s", message)
+        # Display in Mainsail console correctly
+        self.printer.get_reactor().process_message("UART3: " + message)
 
 def load_config(config):
     return Uart3Monitor(config)
