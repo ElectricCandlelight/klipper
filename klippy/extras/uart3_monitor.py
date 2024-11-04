@@ -12,9 +12,11 @@ class Uart3Monitor:
         self.mcu.register_response(self._handle_uart3_rx, "uart3_rx msg=%s")
         # Get base logger used by Klipper
         print("UART3Monitor initialized") # Debug print
-        logging.info("Starting UART3 monitor") # Log to klippy.log
+        logging.warning("Starting UART3 monitor") # Log to klippy.log
         
     def _handle_uart3_rx(self, params):
+            debuglevel = logging.INFO
+            logging.getLogger().setLevel(debuglevel)
             logging.info("new message received") # Debug print
             message = params['msg'].decode('utf-8').strip()
             # Log to klippy.log

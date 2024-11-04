@@ -3,6 +3,7 @@
 # Copyright (C) 2023  <Your Name>
 #
 # This file may be distributed under the terms of the GNU GPLv3 license.
+import logging
 
 class HelloWorld:
     def __init__(self, config):
@@ -10,6 +11,7 @@ class HelloWorld:
         self.gcode = self.printer.lookup_object('gcode')
         self.gcode.register_command('HELLO', self.cmd_HELLO, desc="Sends HELLO command to MCU")
         self.mcu = self.printer.lookup_object('mcu')
+        logging.warning("Starting hello") # Log to klippy.log
         
     def cmd_HELLO(self, gcmd):
         oid = self.mcu.create_oid()
