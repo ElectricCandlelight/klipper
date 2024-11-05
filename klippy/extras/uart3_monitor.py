@@ -14,7 +14,6 @@ class Uart3Monitor:
         logging.warning("UART3Monitor initialized")
         
     def _handle_uart3_rx(self, params):
-        logging.warning("Made it to _handle_uart3_rx")
         message = params['msg'].decode('utf-8').strip()
         # Log to klippy.log
         match message:
@@ -72,6 +71,8 @@ class Uart3Monitor:
                 logging.warning("Cooling")
             case "A26":
                 logging.warning("Refresh print list")
+            case _:
+                logging.warning("Unknown command: %s", message)
         # Display in Mainsail console correctly
 
 def load_config(config):
