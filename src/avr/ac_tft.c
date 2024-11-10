@@ -47,3 +47,17 @@ ISR(USART3_RX_vect)
 
 // Register uart3_rx response
 DECL_CONSTANT_STR("RESERVE_PINS_uart3", "PJ0,PJ1");
+
+void command_uart3_write(uint32_t *args)
+{
+    uint8_t oid = args[0];
+    uint8_t data_len = args[1];
+    uint8_t *data = command_decode_ptr(args[2]);
+    
+    // Write data to UART3
+    for (int i = 0; i < data_len; i++) {
+        while (!(UCSR3A & (1<<UDRE3))); // Wait for empty transmit buffer
+        UDR3 = data[i];
+    }
+}
+DECL_COMMAND(command_uart3_write, "uart3_write oid=%c data=%*s");
