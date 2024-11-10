@@ -5,20 +5,22 @@
 
 import logging
 
+
 class Uart3Monitor:
     def __init__(self, config):
         self.printer = config.get_printer()
         self.mcu = self.printer.lookup_object('mcu')
         self.oid = self.mcu.create_oid()
         # Simple response registration - no OID needed
+        self.cmd_uart3_write = self.mcu.lookup_command(
+            "uart3_write oid=%c data=%*s")
         self.mcu.register_response(self._handle_uart3_rx, "uart3_rx")
         logging.warning("UART3Monitor initialized")
 
     def send_uart3(self, data):
         """Send data to UART3"""
-        self.mcu.send_command("uart3_write oid=%c data=%*s", 
-                            [self.oid, len(data), data])
-        
+        self.mcu.send(self.cmd_uart3_write, [self.oid, len(data), data])
+
     def _handle_uart3_rx(self, params):
         message = params['msg'].decode('utf-8').strip()
         # Log to klippy.log
@@ -82,6 +84,7 @@ class Uart3Monitor:
             case _:
                 logging.warning("Unknown command: %s", message)
         # Display in Mainsail console correctly
+
 
 def load_config(config):
     return Uart3Monitor(config)
