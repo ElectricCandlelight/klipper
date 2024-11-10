@@ -61,15 +61,3 @@ void command_uart3_write(uint32_t *args)
     }
 }
 DECL_COMMAND(command_uart3_write, "uart3_write oid=%c data=%*s");
-
-
-void command_i2c_write(uint32_t *args)
-{
-    uint8_t oid = args[0];
-    struct i2cdev_s *i2c = oid_lookup(oid, command_config_i2c);
-    uint8_t data_len = args[1];
-    uint8_t *data = command_decode_ptr(args[2]);
-    int ret = i2c_dev_write(i2c, data_len, data);
-    i2c_shutdown_on_err(ret);
-}
-DECL_COMMAND(command_i2c_write, "i2c_write oid=%c data=%*s");
