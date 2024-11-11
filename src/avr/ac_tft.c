@@ -78,4 +78,4 @@ command_uart3_write(uint32_t *args)
         UDR3 = data[i];
     }
 }
-DECL_COMMAND(command_uart3_write, "uart3_write oid=%c data=%*s"););
+DECL_COMMAND(command_uart3_write, "uart3_write oid=%c data=%*s");
