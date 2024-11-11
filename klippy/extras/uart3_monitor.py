@@ -11,15 +11,8 @@ class Uart3Monitor:
         self.printer = config.get_printer()
         self.mcu = self.printer.lookup_object('mcu')
         self.oid = self.mcu.create_oid()
-        # Simple response registration - no OID needed
-        # Should match C declaration
-        self.mcu.add_config_cmd("config_uart3 oid=%d" % (self.oid,))
-        self.cmd_uart3_write = self.mcu.lookup_command("uart3_write oid=%c data=%*s")
         self.mcu.register_response(self._handle_uart3_rx, "uart3_rx")
         logging.warning("UART3Monitor initialized")
-
-    def send_uart3(self, data):
-        self.cmd_uart3_write.send([self.oid, data])
 
     def _handle_uart3_rx(self, params):
         message = params['msg'].decode('utf-8').strip()
@@ -27,8 +20,6 @@ class Uart3Monitor:
         match message:
             case "A0":
                 logging.warning("Extruder temperature")
-                temp_str = "A0V 132\r\n"  # Format with CR+LF
-                self.send_uart3(temp_str)
             case "A1":
                 logging.warning("Target extruder temperature")
             case "A2":
