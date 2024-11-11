@@ -48,6 +48,6 @@ DECL_CONSTANT_STR("RESERVE_PINS_uart3", "PJ0,PJ1");
 void command_hello(uint32_t *args)
 {
     uint8_t oid = args[0];
-    sendf("hello_response oid=%c msg=%s", oid, "UART3 monitoring");
+    sendf("uart3_rx msg=%s", "UART3 monitoring");
 }
 DECL_COMMAND(command_hello, "hello oid=%c");
