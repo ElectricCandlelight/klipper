@@ -21,7 +21,7 @@ class Uart3Monitor:
 
     def cmd_HELLO(self):
         # Direct MCU command handler
-        return self.mcu.create_command("hello oid=%c", self.oid)
+        self.cmd_hello.send([self.oid])
 
     def _handle_uart3_rx(self, params):
         message = params['msg'].decode('utf-8').strip()
@@ -29,7 +29,7 @@ class Uart3Monitor:
         match message:
             case "A0":
                 logging.warning("Extruder temperature")
-                self.cmd_HELLO().send()
+                self.cmd_HELLO()
             case "A1":
                 logging.warning("Target extruder temperature")
             case "A2":
