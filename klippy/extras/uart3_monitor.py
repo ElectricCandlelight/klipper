@@ -13,7 +13,7 @@ class Uart3Monitor:
         self.oid = self.mcu.create_oid()
         # Simple response registration - no OID needed
         # Should match C declaration
-        self.cmd_uart3_write = self.mcu.lookup_command("uart3_write oid=%c data=%*s",cq=None)
+        self.cmd_uart3_write = self.mcu.lookup_command("uart3_write oid=%c data=%*s")
         self.mcu.register_response(self._handle_uart3_rx, "uart3_rx")
         logging.warning("UART3Monitor initialized")
 
