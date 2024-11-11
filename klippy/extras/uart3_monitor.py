@@ -18,8 +18,7 @@ class Uart3Monitor:
         logging.warning("UART3Monitor initialized")
 
     def send_uart3(self, data):
-        """Send data to UART3"""
-        self.mcu.send(self.cmd_uart3_write, [self.oid, len(data), data])
+        self.cmd_uart3_write.send([self.oid, data])
 
     def _handle_uart3_rx(self, params):
         message = params['msg'].decode('utf-8').strip()
