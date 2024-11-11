@@ -8,6 +8,7 @@ import logging
 
 class Uart3Monitor:
     def __init__(self, config):
+        logging.warning("Starting UART3 monitor")
         self.printer = config.get_printer()
         self.mcu = self.printer.lookup_object('mcu')
         self.oid = self.mcu.create_oid()
@@ -15,6 +16,7 @@ class Uart3Monitor:
         self.mcu.register_config_callback(self.build_config)
         self.cmd_uart3_write = None
         self.mcu.register_response(self._handle_uart3_rx, "uart3_rx msg=%s")
+        logging.warning("Started UART3 monitor")
         
     def build_config(self):
         self.mcu.add_config_cmd("config_uart3 oid=%d" % (self.oid,))
@@ -24,9 +26,11 @@ class Uart3Monitor:
         
     def send_uart3(self, data):
         # Send data to UART3
+        logging.warning("Sending data to UART3")
         self.cmd_uart3_write.send([self.oid, len(data), data])
 
     def _handle_uart3_rx(self, params):
+        logging.warning("Received data from UART3")
         message = params['msg'].decode('utf-8').strip()
         # Log to klippy.log
         match message:
