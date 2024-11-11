@@ -11,14 +11,17 @@ class Uart3Monitor:
         self.printer = config.get_printer()
         self.mcu = self.printer.lookup_object('mcu')
         self.oid = self.mcu.create_oid()
-        self.mcu.register_config_command("hello oid=%c", self.cmd_HELLO)
+        cmd_queue = self.mcu.alloc_command_queue()
+        self.cmd_hello = self.mcu.lookup_command(
+            "hello oid=%c",
+            cq=cmd_queue
+        )
         self.mcu.register_response(self._handle_uart3_rx, "uart3_rx")
         logging.warning("UART3Monitor initialized")
 
     def cmd_HELLO(self):
         # Direct MCU command handler
         return self.mcu.create_command("hello oid=%c", self.oid)
-
 
     def _handle_uart3_rx(self, params):
         message = params['msg'].decode('utf-8').strip()
