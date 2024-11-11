@@ -50,12 +50,6 @@ struct uart3_s {
     uint8_t data[64];  // Buffer for TX/RX
 };
 
-struct uart3_s {
-    uint8_t oid;
-    uint16_t data_size;
-    uint8_t data[64];
-};
-
 void
 command_config_uart3(uint32_t *args)
 {
