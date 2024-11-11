@@ -50,16 +50,32 @@ struct uart3_s {
     uint8_t data[64];  // Buffer for TX/RX
 };
 
-void command_uart3_write(uint32_t *args)
+struct uart3_s {
+    uint8_t oid;
+    uint16_t data_size;
+    uint8_t data[64];
+};
+
+void
+command_config_uart3(uint32_t *args)
 {
     uint8_t oid = args[0];
+    struct uart3_s *uart3 = oid_alloc(oid, command_config_uart3, sizeof(*uart3));
+    uart3->oid = oid;
+}
+DECL_COMMAND(command_config_uart3, "config_uart3 oid=%c");
+
+void
+command_uart3_write(uint32_t *args)
+{
+    uint8_t oid = args[0];
+    struct uart3_s *uart3 = oid_lookup(oid, command_config_uart3);
     uint8_t data_len = args[1];
     uint8_t *data = command_decode_ptr(args[2]);
     
-    // Write each byte to UART3
     for (int i = 0; i < data_len; i++) {
-        while (!(UCSR3A & (1<<UDRE3))); // Wait for TX buffer empty
+        while (!(UCSR3A & (1<<UDRE3)));
         UDR3 = data[i];
     }
 }
-DECL_COMMAND(command_uart3_write, "uart3_write oid=%c data=%*s");
+DECL_COMMAND(command_uart3_write, "uart3_write oid=%c data=%*s"););
