@@ -79,7 +79,7 @@ ISR(USART3_RX_vect)
         // Check for end of message (newline or buffer full)
         if (data == '\n' || uart3->receive_pos >= UART_BUF_SIZE - 1) {
             uart3->receive_buf[uart3->receive_pos] = '\0';
-            sendf("uart3_rx oid=%c msg=%s", uart3->oid, uart3->receive_buf);
+            sendf("uart3_rx msg=%s", uart3->receive_buf);
             uart3->receive_pos = 0;
         }
     }
