@@ -11,10 +11,15 @@
 #define UART3_BAUD 115200
 #define UART_BUF_SIZE 64
 
+void config_uart3(uint32_t *args)
+{
+    uint8_t oid = args[0];
+}
+DECL_COMMAND(config_uart3, "config_uart3 oid=%c");
+
 void
 command_uart3_write(uint32_t *args)
 {
-    uint8_t oid = args[0];
     uint8_t data_len = args[1];
     uint8_t *data = command_decode_ptr(args[2]);
     
