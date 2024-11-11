@@ -1,42 +1,34 @@
-# klippy/extras/uart3_monitor.py
+# UART3 monitoring for Klipper
+#
+# Copyright (C) 2024 <Your Name>
+# This file may be distributed under the terms of the GNU GPLv3 license.
+
 import logging
+
 
 class Uart3Monitor:
     def __init__(self, config):
         self.printer = config.get_printer()
         self.mcu = self.printer.lookup_object('mcu')
         self.oid = self.mcu.create_oid()
-        # Register configuration callback
-        self.mcu.register_config_callback(self.build_config)
-        self.cmd_uart3_write = None
-        # Register response handler
-        self.mcu.register_response(self._handle_uart3_rx, "uart3_rx msg=%s")
-        logging.info("UART3Monitor initialized")
-        
-    def build_config(self):
-        self.mcu.add_config_cmd("config_uart3 oid=%d" % (self.oid,))
-        cmd_queue = self.mcu.alloc_command_queue()
-        self.cmd_uart3_write = self.mcu.lookup_command(
-            "uart3_write oid=%c data=%*s", cq=cmd_queue)
-        
-    def send_uart3(self, data):
-        """Send data to UART3"""
-        if not data.endswith('\n'):
-            data += '\n'
-        self.cmd_uart3_write.send([self.oid, len(data), data])
-        
+        self.mcu.register_config_command("hello oid=%c", self.cmd_HELLO)
+        self.mcu.register_response(self._handle_uart3_rx, "uart3_rx")
+        logging.warning("UART3Monitor initialized")
+
+    def cmd_HELLO(self):
+        # Direct MCU command handler
+        return self.mcu.create_command("hello oid=%c", self.oid)
+
+
     def _handle_uart3_rx(self, params):
-        """Handle received UART3 data"""
         message = params['msg'].decode('utf-8').strip()
-        logging.info("UART3 received: %s", message)
-        
-        # Handle specific messages
+        # Log to klippy.log
         match message:
             case "A0":
-                temp_str = "A0V 132\r\n"
-                self.send_uart3(temp_str)
+                logging.warning("Extruder temperature")
+                self.cmd_HELLO().send()
             case "A1":
-                logging.info("Target extruder temperature")
+                logging.warning("Target extruder temperature")
             case "A2":
                 logging.warning("Bed temperature")
             case "A3":
@@ -88,7 +80,9 @@ class Uart3Monitor:
             case "A26":
                 logging.warning("Refresh print list")
             case _:
-                logging.info("Unknown command: %s", message)
+                logging.warning("Unknown command: %s", message)
+        # Display in Mainsail console correctly
+
 
 def load_config(config):
     return Uart3Monitor(config)
