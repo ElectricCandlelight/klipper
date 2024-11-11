@@ -10,13 +10,21 @@ class Uart3Monitor:
     def __init__(self, config):
         self.printer = config.get_printer()
         self.mcu = self.printer.lookup_object('mcu')
-        self.gcode = self.printer.lookup_object('gcode')
         self.oid = self.mcu.create_oid()
-        # Register uart3_write command
-        self.cmd_uart3_write = self.mcu.lookup_command(
-            "uart3_write oid=%c data=%*s")
+        # Register configuration callback
+        self.mcu.register_config_callback(self.build_config)
+        self.cmd_uart3_write = None
         # Register RX handler
         self.mcu.register_response(self._handle_uart3_rx, "uart3_rx msg=%s")
+        
+    def build_config(self):
+        # Add config command
+        self.mcu.add_config_cmd("config_uart3 oid=%d" % (self.oid,))
+        # Allocate command queue
+        cmd_queue = self.mcu.alloc_command_queue()
+        # Register uart3_write command
+        self.cmd_uart3_write = self.mcu.lookup_command(
+            "uart3_write oid=%c data=%*s", cq=cmd_queue)
         
     def send_uart3(self, data):
         # Send data to UART3
