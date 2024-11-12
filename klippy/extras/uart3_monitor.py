@@ -15,13 +15,13 @@ class Uart3Monitor:
         logging.warning("UART3Monitor initialized")
 
     def build_config(self):
-        logging.debug(f"Adding uart3_test command to config with oid: {self.oid}")
+        logging.debug(f"Adding uart3_test_custom command to config with oid: {self.oid}")
         if self.oid == 0:
             logging.error("OID is 0, which is invalid. Please check OID allocation.")
-        self.mcu.add_config_cmd("uart3_test oid=%c" % self.oid)
+        self.mcu.add_config_cmd("uart3_test_custom oid=%c" % self.oid)
         cmd_queue = self.mcu.alloc_command_queue()
         self.cmd_test = self.mcu.lookup_command(
-            "uart3_test oid=%c",
+            "uart3_test_custom oid=%c",
             cq=cmd_queue
         )
         logging.debug(f"Command lookup completed with oid: {self.oid}")

@@ -39,9 +39,9 @@ ISR(USART3_RX_vect)
 
 DECL_CONSTANT_STR("RESERVE_PINS_uart3", "PJ0,PJ1");
 
-void command_uart3_test(uint32_t *args) {
+void command_uart3_test_custom(uint32_t *args) {
     uint8_t oid = args[0];
-    sendf("uart3_test command received with oid=%d", oid);
+    sendf("uart3_test_custom command received with oid=%d", oid);
     sendf("uart3_rx msg=%s", "UART3 test message"); 
 }
-DECL_COMMAND(command_uart3_test, "uart3_test oid=%c");
+DECL_COMMAND(command_uart3_test_custom, "uart3_test_custom oid=%c");
