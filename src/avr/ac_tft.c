@@ -1,8 +1,3 @@
-// UART3 monitoring code
-//
-// Copyright (C) 2024 <Your Name>
-// This file may be distributed under the terms of the GNU GPLv3 license.
-
 #include <avr/interrupt.h>
 #include "command.h"  // sendf
 #include "sched.h"    // DECL_INIT
@@ -11,8 +6,7 @@
 #define UART3_BAUD 115200
 #define UART_BUF_SIZE 64
 
-void
-uart3_init(void)
+void uart3_init(void)
 {
     uint32_t cm = 16;
     uint32_t div = DIV_ROUND_CLOSEST(CONFIG_CLOCK_FREQ, cm * UART3_BAUD) - 1UL;
@@ -43,7 +37,6 @@ ISR(USART3_RX_vect)
 }
 
 DECL_CONSTANT_STR("RESERVE_PINS_uart3", "PJ0,PJ1");
-
 
 void command_uart3_test(uint32_t *args) {
     uint8_t oid = args[0];
