@@ -10,9 +10,13 @@ class Uart3Monitor:
             "uart3_test oid=%c",
             cq=cmd_queue
         )
-        self.mcu.add_config_cmd("uart3_test oid=%c" % self.oid)
         self.mcu.register_response(self._handle_uart3_rx, "uart3_rx")
+        self.mcu.register_config_callback(self.build_config)
         logging.warning("UART3Monitor initialized")
+
+    def build_config(self):
+        logging.debug("Adding uart3_test command to config")
+        self.mcu.add_config_cmd("uart3_test oid=%c" % self.oid)
 
     def send_test(self):
         logging.debug(f"Sending test command with oid: {self.oid}")
@@ -21,6 +25,7 @@ class Uart3Monitor:
     def _handle_uart3_rx(self, params):
         message = params['msg'].decode('utf-8').strip()
         # Log to klippy.log
+        logging.debug(f"Received UART3 message: {message}")
         match message:
             case "A0":
                 logging.warning("Extruder temperature")
