@@ -15,14 +15,14 @@ class Uart3Monitor:
         logging.warning("UART3Monitor initialized")
 
     def build_config(self):
-        logging.debug("Adding uart3_test command to config")
+        logging.debug(f"Adding uart3_test command to config with oid: {self.oid}")
         self.mcu.add_config_cmd("uart3_test oid=%c" % self.oid)
         cmd_queue = self.mcu.alloc_command_queue()
         self.cmd_test = self.mcu.lookup_command(
             "uart3_test oid=%c",
             cq=cmd_queue
         )
-        
+        logging.debug(f"Command lookup completed with oid: {self.oid}")
 
     def send_test(self):
         logging.debug(f"Sending test command with oid: {self.oid}")
