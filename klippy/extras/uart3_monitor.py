@@ -10,10 +10,12 @@ class Uart3Monitor:
             "uart3_test oid=%c",
             cq=cmd_queue
         )
+        self.mcu.add_config_cmd("uart3_test oid=%c" % self.oid)
         self.mcu.register_response(self._handle_uart3_rx, "uart3_rx")
         logging.warning("UART3Monitor initialized")
 
     def send_test(self):
+        logging.debug(f"Sending test command with oid: {self.oid}")
         self.cmd_test.send([self.oid])
 
     def _handle_uart3_rx(self, params):
