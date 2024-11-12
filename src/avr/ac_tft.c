@@ -11,9 +11,10 @@ void uart3_init(void)
     uint32_t cm = 16;
     uint32_t div = DIV_ROUND_CLOSEST(CONFIG_CLOCK_FREQ, cm * UART3_BAUD) - 1UL;
     UBRR3H = div >> 8;
-    UBRR3L = div;
+    UBR3L = div;
     UCSR3B = (1 << RXEN3) | (1 << TXEN3) | (1 << RXCIE3);
     UCSR3C = (1 << UCSZ31) | (1 << UCSZ30);
+    sendf("UART3 initialized with baud rate %u", UART3_BAUD);
 }
 DECL_INIT(uart3_init);
 
@@ -40,6 +41,7 @@ DECL_CONSTANT_STR("RESERVE_PINS_uart3", "PJ0,PJ1");
 
 void command_uart3_test(uint32_t *args) {
     uint8_t oid = args[0];
+    sendf("uart3_test command received with oid=%d", oid);
     sendf("uart3_rx msg=%s", "UART3 test message"); 
 }
 DECL_COMMAND(command_uart3_test, "uart3_test oid=%c");
