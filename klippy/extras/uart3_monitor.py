@@ -2,21 +2,27 @@ import logging
 
 class Uart3Monitor:
     def __init__(self, config):
+        logging.warning("UART3Monitor starting")
         self.printer = config.get_printer()
         self.mcu = self.printer.lookup_object('mcu')
         self.oid = self.mcu.create_oid()
-        cmd_queue = self.mcu.alloc_command_queue()
-        self.cmd_test = self.mcu.lookup_command(
-            "uart3_test oid=%c",
-            cq=cmd_queue
-        )
-        self.mcu.register_response(self._handle_uart3_rx, "uart3_rx")
+        logging.warning(f"Created oid: {self.oid}")
         self.mcu.register_config_callback(self.build_config)
+        logging.warning("Config callback registered")
+
+        self.mcu.register_response(self._handle_uart3_rx, "uart3_rx")
+       
         logging.warning("UART3Monitor initialized")
 
     def build_config(self):
         logging.debug("Adding uart3_test command to config")
         self.mcu.add_config_cmd("uart3_test oid=%c" % self.oid)
+        cmd_queue = self.mcu.alloc_command_queue()
+        self.cmd_test = self.mcu.lookup_command(
+            "uart3_test oid=%c",
+            cq=cmd_queue
+        )
+        
 
     def send_test(self):
         logging.debug(f"Sending test command with oid: {self.oid}")
