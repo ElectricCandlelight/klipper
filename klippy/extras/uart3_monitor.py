@@ -12,16 +12,15 @@ class Uart3Monitor:
         self.mcu = self.printer.lookup_object('mcu')
         self.oid = self.mcu.create_oid()
         cmd_queue = self.mcu.alloc_command_queue()
-        self.cmd_hello = self.mcu.lookup_command(
-            "hello oid=%c",
+        self.cmd_test = self.mcu.lookup_command(
+            "uart3_test oid=%c",
             cq=cmd_queue
         )
         self.mcu.register_response(self._handle_uart3_rx, "uart3_rx")
         logging.warning("UART3Monitor initialized")
 
-    def cmd_HELLO(self):
-        # Direct MCU command handler
-        self.cmd_hello.send([self.oid])
+    def send_test(self):
+        self.cmd_test.send([self.oid])
 
     def _handle_uart3_rx(self, params):
         message = params['msg'].decode('utf-8').strip()
@@ -29,7 +28,7 @@ class Uart3Monitor:
         match message:
             case "A0":
                 logging.warning("Extruder temperature")
-                self.cmd_HELLO()
+                self.send_test()
             case "A1":
                 logging.warning("Target extruder temperature")
             case "A2":
