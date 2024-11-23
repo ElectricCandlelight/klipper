@@ -18,7 +18,6 @@ class AnyCubicMegaScreen:
         self.mcu.register_config_callback(self.build_config)
         self.uart3_send_cmd = None
         self.mcu.register_response(self._handle_uart3_rx, "uart3_rx")
-        self.printer.register_event_handler("klippy:ready", self.handle_ready)
 
     def build_config(self):
         self.mcu.add_config_cmd("config_uart3 oid=%d" % (self.oid))
@@ -26,6 +25,8 @@ class AnyCubicMegaScreen:
         cmd_queue = self.mcu.alloc_command_queue()
         self.uart3_send_cmd = self.mcu.lookup_command(
             "uart3_send oid=%c", cq=cmd_queue)
+        self.uart3_write_cmd = self.mcu.lookup_command(
+            "uart3_write oid=%c data=%*s", cq=cmd_queue)
         
     def _handle_uart3_rx(self, params):
         message = params['msg'].decode('utf-8').strip()
@@ -38,6 +39,8 @@ class AnyCubicMegaScreen:
                 logging.warning("Target extruder temperature")
             case "A2":
                 logging.warning("Bed temperature")
+                scmd = self.uart3_write_cmd.send
+                scmd([self.oid, "A2 60"])
             case "A3":
                 logging.warning("Target bed temperature")
             case "A4":
@@ -94,8 +97,7 @@ class AnyCubicMegaScreen:
         logging.warning("toggle")
         logging.warning(f"Send oid: {self.oid}")
         scmd = self.uart3_send_cmd.send
-        params = scmd([self.oid])
-        logging.warning(f"Params: {params}")
+        scmd([self.oid])
 
     def send_test(self):
         self.uart3_send_cmd.send([self.oid])

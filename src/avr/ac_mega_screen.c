@@ -43,9 +43,29 @@ ISR(USART3_RX_vect)
 
 void uart3_send(uint8_t *args)
 {
-    uint8_t oid = args[0];
     PORTB ^= (1 << PB7);
     //sendf("uart3_result oid=%c success=%c", oid, 1);
 }
 
 DECL_COMMAND(uart3_send, "uart3_send oid=%c");
+
+void command_uart3_tx(uint8_t *args)
+{
+    char *message = (char *)&args[1];
+
+    // Transmit the message
+    while (*message) {
+        while (!(UCSR3A & (1 << UDRE3)));  // Wait for the transmit buffer to be empty
+        UDR3 = *message++;
+    }
+
+    // Add \r\n to the end of the message
+    while (!(UCSR3A & (1 << UDRE3)));  // Wait for the transmit buffer to be empty
+    UDR3 = '\r';
+    while (!(UCSR3A & (1 << UDRE3)));  // Wait for the transmit buffer to be empty
+    UDR3 = '\n';
+}
+
+DECL_COMMAND(command_uart3_tx, "uart3_write oid=%c data=%*s");
+
+
