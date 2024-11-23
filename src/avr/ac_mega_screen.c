@@ -13,3 +13,5 @@ void uart3_init(void)
     PORTB ^= (1 << LED_PIN); 
 }
 
+
+DECL_COMMAND(uart3_init, "config_neopixel oid=%c pin=%u");
