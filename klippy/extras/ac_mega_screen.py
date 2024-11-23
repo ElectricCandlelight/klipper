@@ -9,11 +9,24 @@ import logging
 class AnyCubicMegaScreen:
     def __init__(self, config):
         self.printer = config.get_printer()
+        logging.warning(f"Printer: {self.printer}")
         self.mcu = self.printer.lookup_object('mcu')
+        logging.warning(f"MCU: {self.mcu}")
         self.oid = self.mcu.create_oid()
-        self.mcu.register_config_callback(self.build_config)
+        logging.warning(f"Created oid: {self.oid}")
+        #self.mcu.register_config_callback(self.build_config)
         self.uart3_send_cmd = None
-        self.printer.register_event_handler("klippy:connect", self.send_data)
+
+    def build_config(self):
+        self.mcu.add_config_cmd("uart3_monitor oid=%c" % self.oid)
+        cmd_queue = self.mcu.alloc_command_queue()
+        self.uart3_send_cmd = self.mcu.lookup_command(
+            "uart3_monitor oid=%c",
+            cq=cmd_queue
+        )
+
+    def send_test(self):
+        self.uart3_send_cmd.send([self.oid])
 
 def load_config(config):
     return AnyCubicMegaScreen(config)

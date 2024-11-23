@@ -5,7 +5,7 @@ class Uart3Monitor:
         logging.warning("UART3Monitor starting")
         self.printer = config.get_printer()
         self.mcu = self.printer.lookup_object('mcu')
-        logging.warning("MCU object found: {self.mcu}")
+        logging.warning(f"MCU object found: {self.mcu}")
         self.oid = self.mcu.create_oid()
         logging.warning(f"Created oid: {self.oid}")
         self.mcu.register_config_callback(self.build_config)
