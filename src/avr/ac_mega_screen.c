@@ -60,19 +60,20 @@ void uart3_send(uint8_t *args)
 DECL_COMMAND(uart3_send, "uart3_send oid=%c");
 
 void debug_message(uint8_t *bytes, int len) {
-    output("Debug - Raw message: %*s", 0, "");  // Fixed format string
+    output("debug_msg=%u", len);  // Simple format with one parameter
     for(int i = 0; i < len && i < 32; i++) {
-        output("%02x ", bytes[i]);  // Fixed format string
+        if (i % 8 == 0) {
+            output("\ndebug_byte=%u", bytes[i]);  // One byte per output call
+        }
     }
-    output("\n%*s", 0, "");  // Fixed format string
+    output("\n");  // No parameters needed
 }
 
-// UART transmission test
 void test_uart_send(const char *str) {
     while (*str) {
         while (!(UCSR3A & (1 << UDRE3)));
         UDR3 = *str;
-        output("Debug - UART sent byte: %02x char: %c", *str, *str);  // Fixed format string
+        output("uart_byte=%u", *str);  // Simple format with one parameter
         str++;
     }
 }
@@ -81,11 +82,8 @@ void command_uart3_tx(uint32_t *args)
 {
     PORTB ^= (1 << PB7);
 
-    // Get and debug raw message
     uint8_t *bytes = (uint8_t*)command_decode_ptr(args[1]);
     debug_message(bytes, 32);
-    
-    // Test UART with known string
     test_uart_send("A1V 60\r\n");
 }
 
