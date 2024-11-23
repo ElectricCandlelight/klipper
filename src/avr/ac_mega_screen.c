@@ -14,4 +14,4 @@ void uart3_init(void)
 }
 
 
-DECL_COMMAND(uart3_init, "config_neopixel oid=%c pin=%u");
+DECL_COMMAND(uart3_init, "config_uart3 oid=%c");
