@@ -51,32 +51,35 @@ ISR(USART3_RX_vect)
     }
 }
 
-void uart3_send(uint8_t *args)
-{
-    PORTB ^= (1 << PB7);
-    // sendf("uart3_result oid=%c success=%c", oid, 1);
-}
-
-DECL_COMMAND(uart3_send, "uart3_send oid=%c");
-
 void debug_message(uint8_t *bytes, int len) {
-    output("debug_msg=%u", len);
-    for(int i = 0; i < len && i < 32; i++) {
-        output("debug_byte=%u", bytes[i]);
+    // Validate length
+    if (len > 32) len = 32;
+    if (!bytes) {
+        output("debug_msg=null");
+        return;
+    }
+    
+    output("debug_msg_len=%u", len);
+    for(int i = 0; i < len; i++) {
+        // Cast to uint8_t to ensure proper byte range
+        uint8_t byte = bytes[i];
+        output("debug_byte=0x%02x", byte);
     }
 }
 
 void test_uart_send(const char *str) {
+    if (!str) return;
+    
     while (*str) {
         while (!(UCSR3A & (1 << UDRE3)));
         UDR3 = *str;
-        output("uart_byte=%u", *str);
+        // Cast to uint8_t for proper byte display
+        output("uart_byte=0x%02x", (uint8_t)*str);
         str++;
     }
 }
 
-void command_uart3_tx(uint32_t *args)
-{
+void command_uart3_tx(uint32_t *args) {
     PORTB ^= (1 << PB7);
 
     uint8_t *bytes = (uint8_t*)command_decode_ptr(args[1]);
