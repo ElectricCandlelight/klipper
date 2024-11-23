@@ -59,17 +59,16 @@ void uart3_send(uint8_t *args)
 
 DECL_COMMAND(uart3_send, "uart3_send oid=%c");
 
-void command_uart3_tx(uint8_t *args)
+void command_uart3_tx(uint32_t *args)
 {
     PORTB ^= (1 << PB7);
-    // Get the message to transmit
-    char *message = (char *)(args + 1);
+
+    // Decode the message to transmit
+    char *message = command_decode_ptr(args[1]);
 
     // Transmit the message
-    while (*message)
-    {
-        while (!(UCSR3A & (1 << UDRE3)))
-            ; // Wait for the transmit buffer to be empty
+    while (*message) {
+        while (!(UCSR3A & (1 << UDRE3)));  // Wait for the transmit buffer to be empty
         UDR3 = *message++;
     }
 
