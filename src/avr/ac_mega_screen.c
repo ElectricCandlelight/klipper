@@ -60,11 +60,11 @@ void uart3_send(uint8_t *args)
 DECL_COMMAND(uart3_send, "uart3_send oid=%c");
 
 void debug_message(uint8_t *bytes, int len) {
-    output("Debug - Raw message:");
+    output("Debug - Raw message: %*s", 0, "");  // Fixed format string
     for(int i = 0; i < len && i < 32; i++) {
-        output(" %02x", bytes[i]);
+        output("%02x ", bytes[i]);  // Fixed format string
     }
-    output("\n");
+    output("\n%*s", 0, "");  // Fixed format string
 }
 
 // UART transmission test
@@ -72,7 +72,7 @@ void test_uart_send(const char *str) {
     while (*str) {
         while (!(UCSR3A & (1 << UDRE3)));
         UDR3 = *str;
-        output("Debug - UART sent: 0x%02x ('%c')", *str, *str);
+        output("Debug - UART sent byte: %02x char: %c", *str, *str);  // Fixed format string
         str++;
     }
 }
