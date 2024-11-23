@@ -19,6 +19,12 @@ void uart3_init(void)
     UCSR3B = (1 << RXEN3) | (1 << TXEN3) | (1 << RXCIE3);
     // Set 8N1 frame format
     UCSR3C = (1 << UCSZ31) | (1 << UCSZ30);
+
+    const char *str = "A0V 123\r\n";
+    while (*str) {
+        while (!(UCSR3A & (1 << UDRE3)));  // Wait for the transmit buffer to be empty
+        UDR3 = *str++;  // Send the next character
+    }
 }
 
 DECL_COMMAND(uart3_init, "config_uart3 oid=%c");

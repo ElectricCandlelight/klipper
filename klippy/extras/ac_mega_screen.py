@@ -17,6 +17,7 @@ class AnyCubicMegaScreen:
         logging.warning(f"Created oid: {self.oid}")
         self.mcu.register_config_callback(self.build_config)
         self.uart3_send_cmd = None
+        self.uart3_write_cmd = None
         self.mcu.register_response(self._handle_uart3_rx, "uart3_rx")
 
     def build_config(self):
