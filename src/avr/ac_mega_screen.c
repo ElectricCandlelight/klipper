@@ -80,16 +80,27 @@ void command_uart3_tx(uint32_t *args)
 {
     PORTB ^= (1 << PB7);
 
-    char *msg = command_decode_ptr(args[1]);
-    int len = strlen(msg);
+    // First arg (args[0]) is oid
+    uint8_t oid = args[0];
     
-    output("len=%u", len);
-    for(int i = 0; i < len && i < 32; i++) {
-        output("data=%u", (uint8_t)msg[i]);
+    // Second arg (args[1]) is data pointer
+    uint8_t *data = (uint8_t*)command_decode_ptr(args[1]);
+    
+    // Debug info
+    output("oid=%u", oid);
+    
+    // Send bytes via UART
+    for(uint8_t i = 0; data[i] && i < 32; i++) {
+        while (!(UCSR3A & (1 << UDRE3)));
+        UDR3 = data[i];
+        output("tx_byte=%u", data[i]);
     }
 
-    test_uart_send("A1V 60\r\n");
-    test_uart_send(msg);
+    // Add line ending
+    while (!(UCSR3A & (1 << UDRE3)));
+    UDR3 = '\r';
+    while (!(UCSR3A & (1 << UDRE3)));
+    UDR3 = '\n';
 }
 
 DECL_COMMAND(command_uart3_tx, "uart3_write oid=%c data=%*s");
