@@ -5,12 +5,11 @@
 
 #define UART3_BAUD 115200
 #define UART_BUF_SIZE 64
-#define LED_PIN PB7 
 
 void uart3_init(void)
 {
-    DDRB |= (1 << LED_PIN); 
-    PORTB ^= (1 << LED_PIN); 
+    DDRB |= (1 << PB7); 
+    PORTB ^= (1 << PB7); 
 }
 
 
