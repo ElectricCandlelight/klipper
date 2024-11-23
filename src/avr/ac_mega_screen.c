@@ -10,7 +10,9 @@
 void uart3_init(void)
 {
     DDRB |= (1 << PB7); 
-    PORTB ^= (1 << PB7); 
+    PORTB ^= (1 << PB7);
+    _delay_ms(5000);
+    PORTB ^= (1 << LED_PIN); 
 }
 
 
