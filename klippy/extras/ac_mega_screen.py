@@ -92,6 +92,7 @@ class AnyCubicMegaScreen:
 
     def handle_ready(self):
         logging.warning("toggle")
+        logging.warning(f"Send oid: {self.oid}")
         scmd = self.uart3_send_cmd.send
         params = scmd([self.oid])
         logging.warning(f"Params: {params}")
