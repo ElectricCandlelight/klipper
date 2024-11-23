@@ -10,7 +10,7 @@
 void uart3_init(void)
 {
     DDRB |= (1 << PB7); 
-    PORTB ^= (1 << PB7);
+    PORTB &= ~(1 << PB7)
 }
 
 
