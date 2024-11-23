@@ -21,7 +21,9 @@ class PrinterNeoPixel:
         ppins = printer.lookup_object('pins')
         pin_params = ppins.lookup_pin(config.get('pin'))
         self.mcu = pin_params['chip']
+        logging.warning(f"Neo MCU: {self.mcu}")
         self.oid = self.mcu.create_oid()
+        logging.warning(f"Created oid: {self.oid}")
         self.pin = pin_params['pin']
         self.mcu.register_config_callback(self.build_config)
         self.neopixel_update_cmd = self.neopixel_send_cmd = None
