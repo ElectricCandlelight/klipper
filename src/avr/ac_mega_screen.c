@@ -76,24 +76,27 @@ void test_uart_send(const char *str) {
     }
 }
 
-void command_uart3_tx(uint32_t *args)
+void command_uart3_tx(uint32_t *args) 
 {
     PORTB ^= (1 << PB7);
 
-    // First arg (args[0]) is oid
+    // Get message length and data
     uint8_t oid = args[0];
+    uint16_t len = strlen((char*)command_decode_ptr(args[1]));
+    const char *str = (const char*)command_decode_ptr(args[1]);
     
-    // Second arg (args[1]) is data pointer
-    uint8_t *data = (uint8_t*)command_decode_ptr(args[1]);
+    // Validate length
+    if (len > 32) len = 32;
+
+    // Debug output
+    output("uart_cmd_len=%u", len);
     
-    // Debug info
-    output("oid=%u", oid);
-    
-    // Send bytes via UART
-    for(uint8_t i = 0; data[i] && i < 32; i++) {
+    // Send message bytes
+    for(uint8_t i = 0; i < len; i++) {
+        uint8_t byte = str[i];
+        output("uart_byte=%u", byte);
         while (!(UCSR3A & (1 << UDRE3)));
-        UDR3 = data[i];
-        output("tx_byte=%u", data[i]);
+        UDR3 = byte;
     }
 
     // Add line ending
