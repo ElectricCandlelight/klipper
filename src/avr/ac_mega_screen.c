@@ -63,16 +63,7 @@ void command_uart3_tx(uint32_t *args)
 {
     PORTB ^= (1 << PB7);
 
-    // Decode the message to transmit
-    char *message = command_decode_ptr(args[1]);
-
-    // Transmit the message
-    while (*message) {
-        while (!(UCSR3A & (1 << UDRE3)));  // Wait for the transmit buffer to be empty
-        UDR3 = *message++;
-    }
-
-    const char *str = "A0V 69\r\n";
+    const char *str = "A1V 69\r\n";
     while (*str)
     {
         while (!(UCSR3A & (1 << UDRE3)))
