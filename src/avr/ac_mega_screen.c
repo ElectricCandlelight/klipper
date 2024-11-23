@@ -3,6 +3,7 @@
 #include "sched.h"    // DECL_INIT
 #include "autoconf.h" // CONFIG_CLOCK_FREQ
 #include <avr/io.h>
+#include <string.h>
 
 #define UART3_BAUD 115200
 #define UART_BUF_SIZE 64
@@ -87,12 +88,14 @@ void command_uart3_tx(uint32_t *args)
     char *msg = command_decode_ptr(args[1]);
     int len = strlen(msg);
     
-    output("protocol_msg_len=%u", len);
+    output("protocol_msg=%u", len);  // Simplified output format
+    
+    // Debug bytes with simplified format
     for(int i = 0; i < len && i < 32; i++) {
-        output("protocol_byte=0x%02x", (uint8_t)msg[i]);
+        output("byte=%u", (uint8_t)msg[i]);  // Simplified format
     }
 
-    // Send test message first to verify UART works
+    // Send test message first
     test_uart_send("A1V 60\r\n");
     
     // Now try protocol message
