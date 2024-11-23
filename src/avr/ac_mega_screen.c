@@ -76,6 +76,8 @@ void test_uart_send(const char *str) {
     }
 }
 
+DECL_COMMAND(command_uart3_send, "uart3_send oid=%c");
+
 void command_uart3_tx(uint32_t *args)
 {
     PORTB ^= (1 << PB7);
