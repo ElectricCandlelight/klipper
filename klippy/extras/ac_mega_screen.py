@@ -16,11 +16,18 @@ class AnyCubicMegaScreen:
         logging.warning(f"Created oid: {self.oid}")
         self.mcu.register_config_callback(self.build_config)
         self.uart3_send_cmd = None
+        self.printer.register_event_handler("klippy:ready", self.handle_ready)
 
     def build_config(self):
         self.mcu.add_config_cmd("config_uart3 oid=%d" % (self.oid))
         logging.warning(f"Build oid: {self.oid}")
+        cmd_queue = self.mcu.alloc_command_queue()
+        self.uart3_send_cmd = self.mcu.lookup_command("uart3_send oid=%d", "uarurat3_result oid=%c success=%c",oid=self.oid, cq=cmd_queue)
 
+    def handle_ready(self):
+        scmd = self.uart3_send_cmd.send
+        params = scmd([self.oid])
+        logging.warning(f"Params: {params}")
 
     def send_test(self):
         self.uart3_send_cmd.send([self.oid])
