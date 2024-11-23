@@ -11,9 +11,7 @@ void uart3_init(void)
 {
     DDRB |= (1 << PB7); 
     PORTB ^= (1 << PB7);
-    _delay_ms(5000);
-    PORTB ^= (1 << PB7); 
-}a
+}
 
 
 DECL_COMMAND(uart3_init, "config_uart3 oid=%c");
