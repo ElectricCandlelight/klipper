@@ -18,7 +18,7 @@ class AnyCubicMegaScreen:
         self.uart3_send_cmd = None
 
     def build_config(self):
-        self.mcu.add_config_cmd("config_uart3 oid=%c" % (self.oid))
+        self.mcu.add_config_cmd("config_uart3 oid=%d" % (self.oid))
         logging.warning(f"Build oid: {self.oid}")
 
 
