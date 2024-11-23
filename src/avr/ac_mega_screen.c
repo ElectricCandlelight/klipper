@@ -65,6 +65,7 @@ void command_uart3_tx(uint32_t *args)
 
     // Decode the message to transmit
     char *message = command_decode_ptr(args[1]);
+    sendf("Debug - Received message: %s", message);
 
     // Transmit the message
     while (*message) {

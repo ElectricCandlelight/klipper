@@ -39,8 +39,9 @@ class AnyCubicMegaScreen:
                 logging.warning("Target extruder temperature")
             case "A2":
                 logging.warning("Bed temperature")
-                scmd = self.uart3_write_cmd.send
-                scmd([self.oid, b"A2V 60\r\n"])
+                message = "A2V 60\r\n".encode('ascii')  # Try explicit ASCII encoding
+                logging.warning(f"Sending message: {message}")  # Debug log
+                self.uart3_write_cmd.send([self.oid, message])
             case "A3":
                 logging.warning("Target bed temperature")
             case "A4":
