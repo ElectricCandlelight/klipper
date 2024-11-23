@@ -80,25 +80,28 @@ void command_uart3_tx(uint32_t *args)
 {
     PORTB ^= (1 << PB7);
 
-    // Get message length and data
-    uint8_t oid = args[0];
-    uint16_t len = strlen((char*)command_decode_ptr(args[1]));
-    const char *str = (const char*)command_decode_ptr(args[1]);
+    // Get raw bytes
+    uint8_t *raw = (uint8_t*)command_decode_ptr(args[1]);
+    output("raw=%p", raw);
     
-    // Validate length
-    if (len > 32) len = 32;
-
-    // Debug output
-    output("uart_cmd_len=%u", len);
+    // Build message string
+    char msg[32];
+    uint8_t pos = 0;
     
-    // Send message bytes
-    for(uint8_t i = 0; i < len; i++) {
-        uint8_t byte = str[i];
-        output("uart_byte=%u", byte);
-        while (!(UCSR3A & (1 << UDRE3)));
-        UDR3 = byte;
+    // Copy bytes while converting large values to actual chars
+    while(raw[pos] && pos < 31) {
+        // Mask to get actual byte value
+        msg[pos] = raw[pos] & 0xFF;
+        output("raw=%u char=%c", raw[pos], msg[pos]);
+        pos++;
     }
-
+    msg[pos] = '\0';
+    
+    output("msg=%s len=%u", msg, pos);
+    
+    // Send converted string
+    test_uart_send(msg);
+    
     // Add line ending
     while (!(UCSR3A & (1 << UDRE3)));
     UDR3 = '\r';
