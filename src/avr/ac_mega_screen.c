@@ -59,31 +59,34 @@ void uart3_send(uint8_t *args)
 
 DECL_COMMAND(uart3_send, "uart3_send oid=%c");
 
+void debug_message(uint8_t *bytes, int len) {
+    output("Debug - Raw message:");
+    for(int i = 0; i < len && i < 32; i++) {
+        output(" %02x", bytes[i]);
+    }
+    output("\n");
+}
+
+// UART transmission test
+void test_uart_send(const char *str) {
+    while (*str) {
+        while (!(UCSR3A & (1 << UDRE3)));
+        UDR3 = *str;
+        output("Debug - UART sent: 0x%02x ('%c')", *str, *str);
+        str++;
+    }
+}
+
 void command_uart3_tx(uint32_t *args)
 {
     PORTB ^= (1 << PB7);
 
-    // Get byte array from command
+    // Get and debug raw message
     uint8_t *bytes = (uint8_t*)command_decode_ptr(args[1]);
+    debug_message(bytes, 32);
     
-    // Create string buffer
-    char str_buffer[32];  // Adjust size as needed
-    int i;
-    
-    // Convert bytes to string
-    for(i = 0; bytes[i] && i < sizeof(str_buffer)-1; i++) {
-        str_buffer[i] = (char)bytes[i];
-    }
-    str_buffer[i] = '\0';
-    
-    output("Debug - Converted string: '%s'", str_buffer);
-    
-    // Send string over UART3
-    char *ptr = str_buffer;
-    while (*ptr) {
-        while (!(UCSR3A & (1 << UDRE3)));
-        UDR3 = *ptr++;
-    }
+    // Test UART with known string
+    test_uart_send("A1V 60\r\n");
 }
 
 DECL_COMMAND(command_uart3_tx, "uart3_write oid=%c data=%*s");
