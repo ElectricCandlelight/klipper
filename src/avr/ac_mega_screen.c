@@ -65,14 +65,7 @@ void command_uart3_tx(uint32_t *args)
 
     // Decode the message to transmit
     char *message = command_decode_ptr(args[1]);
-    // Fixed output() syntax - must include format string
-    output("Debug - Message hex dump: ");  // Note the space at end
-    for(int i = 0; message[i]; i++) {
-        output("%02x ", message[i]);  // Added format specifier
-    }
-    output("\n");  // No format needed for newline
-    output("Debug - Message as string: %s", message);
-    output("\nDebug - Message as string: '%s'", message);;
+    output("Debug - Message received in uart3_tx: %s", message);
 
     // Transmit the message
     while (*message) {
