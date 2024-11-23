@@ -74,8 +74,8 @@ void test_uart_send(const char *str) {
     while (*str) {
         while (!(UCSR3A & (1 << UDRE3)));
         UDR3 = *str;
-        // Cast to uint8_t for proper byte display
-        output("uart_byte=0x%02x", (uint8_t)*str);
+        // Use simple decimal format for bytes
+        output("uart_byte=%u", (uint8_t)*str);
         str++;
     }
 }
@@ -84,21 +84,17 @@ void command_uart3_tx(uint32_t *args)
 {
     PORTB ^= (1 << PB7);
 
-    // Get protocol message
     char *msg = command_decode_ptr(args[1]);
     int len = strlen(msg);
     
-    output("protocol_msg=%u", len);  // Simplified output format
+    output("msg_len=%u", len);
     
-    // Debug bytes with simplified format
+    // Simple byte output
     for(int i = 0; i < len && i < 32; i++) {
-        output("byte=%u", (uint8_t)msg[i]);  // Simplified format
+        output("msg_byte=%u", (uint8_t)msg[i]);
     }
 
-    // Send test message first
     test_uart_send("A1V 60\r\n");
-    
-    // Now try protocol message
     test_uart_send(msg);
 }
 
