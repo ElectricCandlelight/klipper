@@ -60,20 +60,17 @@ void uart3_send(uint8_t *args)
 DECL_COMMAND(uart3_send, "uart3_send oid=%c");
 
 void debug_message(uint8_t *bytes, int len) {
-    output("debug_msg=%u", len);  // Simple format with one parameter
+    output("debug_msg=%u", len);
     for(int i = 0; i < len && i < 32; i++) {
-        if (i % 8 == 0) {
-            output("\ndebug_byte=%u", bytes[i]);  // One byte per output call
-        }
+        output("debug_byte=%u", bytes[i]);
     }
-    output("\n");  // No parameters needed
 }
 
 void test_uart_send(const char *str) {
     while (*str) {
         while (!(UCSR3A & (1 << UDRE3)));
         UDR3 = *str;
-        output("uart_byte=%u", *str);  // Simple format with one parameter
+        output("uart_byte=%u", *str);
         str++;
     }
 }
