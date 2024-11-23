@@ -63,16 +63,27 @@ void command_uart3_tx(uint32_t *args)
 {
     PORTB ^= (1 << PB7);
 
-    // Decode the message to transmit
-    char *message = command_decode_ptr(args[1]);
-    output("Debug - Message received in uart3_tx: %s", message);
-
-    // Transmit the message
-    while (*message) {
-        while (!(UCSR3A & (1 << UDRE3)));  // Wait for the transmit buffer to be empty
-        UDR3 = *message++;
+    // Get byte array from command
+    uint8_t *bytes = (uint8_t*)command_decode_ptr(args[1]);
+    
+    // Create string buffer
+    char str_buffer[32];  // Adjust size as needed
+    int i;
+    
+    // Convert bytes to string
+    for(i = 0; bytes[i] && i < sizeof(str_buffer)-1; i++) {
+        str_buffer[i] = (char)bytes[i];
     }
-
+    str_buffer[i] = '\0';
+    
+    output("Debug - Converted string: '%s'", str_buffer);
+    
+    // Send string over UART3
+    char *ptr = str_buffer;
+    while (*ptr) {
+        while (!(UCSR3A & (1 << UDRE3)));
+        UDR3 = *ptr++;
+    }
 }
 
 DECL_COMMAND(command_uart3_tx, "uart3_write oid=%c data=%*s");
