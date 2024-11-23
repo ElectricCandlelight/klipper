@@ -33,6 +33,7 @@ class AnyCubicMegaScreen:
         match message:
             case "A0":
                 logging.warning("Extruder temperature")
+                self.handle_ready()
             case "A1":
                 logging.warning("Target extruder temperature")
             case "A2":

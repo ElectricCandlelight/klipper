@@ -44,7 +44,7 @@ ISR(USART3_RX_vect)
 void uart3_send(uint8_t *args)
 {
     uint8_t oid = args[0];
-    PORTB |= (1 << PB7);
+    PORTB ^= (1 << PB7);
     sendf("uart3_result oid=%c success=%c", oid, 1);
 }
 
