@@ -59,8 +59,7 @@ void command_uart3_tx(uint8_t *args)
 {
     PORTB ^= (1 << PB7);
     // Get the message to transmit
-    char *message;
-    command_decode_ptr(args + 1, &message);
+    char *message = = command_decode_ptr(args[1]);
 
     // Transmit the message
     while (*message) {
