@@ -24,7 +24,7 @@ class AnyCubicMegaScreen:
         logging.warning(f"Build oid: {self.oid}")
         cmd_queue = self.mcu.alloc_command_queue()
         self.uart3_send_cmd = self.mcu.lookup_query_command(
-            "uart3_send oid=%c", "uarurat3_result oid=%c success=%c", oid=self.oid, cq=cmd_queue)
+            "uart3_send oid=%c", "uart3_result oid=%c success=%c", oid=self.oid, cq=cmd_queue)
 
 
     def handle_ready(self):
