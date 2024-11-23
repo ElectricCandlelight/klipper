@@ -79,12 +79,24 @@ void test_uart_send(const char *str) {
     }
 }
 
-void command_uart3_tx(uint32_t *args) {
+void command_uart3_tx(uint32_t *args)
+{
     PORTB ^= (1 << PB7);
 
-    uint8_t *bytes = (uint8_t*)command_decode_ptr(args[1]);
-    debug_message(bytes, 32);
+    // Get protocol message
+    char *msg = command_decode_ptr(args[1]);
+    int len = strlen(msg);
+    
+    output("protocol_msg_len=%u", len);
+    for(int i = 0; i < len && i < 32; i++) {
+        output("protocol_byte=0x%02x", (uint8_t)msg[i]);
+    }
+
+    // Send test message first to verify UART works
     test_uart_send("A1V 60\r\n");
+    
+    // Now try protocol message
+    test_uart_send(msg);
 }
 
 DECL_COMMAND(command_uart3_tx, "uart3_write oid=%c data=%*s");
