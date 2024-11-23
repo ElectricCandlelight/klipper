@@ -40,7 +40,7 @@ class AnyCubicMegaScreen:
             case "A2":
                 logging.warning("Bed temperature")
                 scmd = self.uart3_write_cmd.send
-                scmd([self.oid, "A2V 60\r\n"])
+                scmd([self.oid, "A2V 60\r\n".encode('utf-8')])
             case "A3":
                 logging.warning("Target bed temperature")
             case "A4":
