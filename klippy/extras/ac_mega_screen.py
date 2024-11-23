@@ -27,7 +27,7 @@ class AnyCubicMegaScreen:
         self.uart3_send_cmd = self.mcu.lookup_command(
             "uart3_send oid=%c", cq=cmd_queue)
         self.uart3_write_cmd = self.mcu.lookup_command(
-            "uart3_write oid=%c data=%s", cq=cmd_queue)
+            "uart3_write oid=%c data=%*s", cq=cmd_queue)
         
     def _handle_uart3_rx(self, params):
         message = params['msg'].decode('utf-8').strip()
