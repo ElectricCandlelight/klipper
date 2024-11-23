@@ -23,7 +23,7 @@ class PrinterNeoPixel:
         self.mcu = pin_params['chip']
         logging.warning(f"Neo MCU: {self.mcu}")
         self.oid = self.mcu.create_oid()
-        logging.warning(f"Created oid: {self.oid}")
+        logging.warning(f"Neo oid: {self.oid}")
         self.pin = pin_params['pin']
         self.mcu.register_config_callback(self.build_config)
         self.neopixel_update_cmd = self.neopixel_send_cmd = None
@@ -62,6 +62,7 @@ class PrinterNeoPixel:
         self.neopixel_send_cmd = self.mcu.lookup_query_command(
             "neopixel_send oid=%c", "neopixel_result oid=%c success=%c",
             oid=self.oid, cq=cmd_queue)
+        logging.warning(f"Neo oid from build: {self.oid}")
     def update_color_data(self, led_state):
         color_data = self.color_data
         for cdidx, (lidx, cidx) in self.color_map:

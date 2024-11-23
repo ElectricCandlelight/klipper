@@ -14,16 +14,13 @@ class AnyCubicMegaScreen:
         logging.warning(f"MCU: {self.mcu}")
         self.oid = self.mcu.create_oid()
         logging.warning(f"Created oid: {self.oid}")
-        #self.mcu.register_config_callback(self.build_config)
+        self.mcu.register_config_callback(self.build_config)
         self.uart3_send_cmd = None
 
     def build_config(self):
         self.mcu.add_config_cmd("uart3_monitor oid=%c" % self.oid)
-        cmd_queue = self.mcu.alloc_command_queue()
-        self.uart3_send_cmd = self.mcu.lookup_command(
-            "uart3_monitor oid=%c",
-            cq=cmd_queue
-        )
+        logging.warning(f"Build oid: {self.oid}")
+
 
     def send_test(self):
         self.uart3_send_cmd.send([self.oid])
