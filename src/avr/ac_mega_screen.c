@@ -53,18 +53,15 @@ ISR(USART3_RX_vect)
 }
 
 void debug_message(uint8_t *bytes, int len) {
-    // Validate length
     if (len > 32) len = 32;
     if (!bytes) {
-        output("debug_msg=null");
+        output("debug=0");
         return;
     }
     
-    output("debug_msg_len=%u", len);
+    output("debug_len=%u", len);
     for(int i = 0; i < len; i++) {
-        // Cast to uint8_t to ensure proper byte range
-        uint8_t byte = bytes[i];
-        output("debug_byte=0x%02x", byte);
+        output("debug=%u", (uint8_t)bytes[i]);
     }
 }
 
@@ -74,8 +71,7 @@ void test_uart_send(const char *str) {
     while (*str) {
         while (!(UCSR3A & (1 << UDRE3)));
         UDR3 = *str;
-        // Use simple decimal format for bytes
-        output("uart_byte=%u", (uint8_t)*str);
+        output("byte=%u", (uint8_t)*str);
         str++;
     }
 }
@@ -87,11 +83,9 @@ void command_uart3_tx(uint32_t *args)
     char *msg = command_decode_ptr(args[1]);
     int len = strlen(msg);
     
-    output("msg_len=%u", len);
-    
-    // Simple byte output
+    output("len=%u", len);
     for(int i = 0; i < len && i < 32; i++) {
-        output("msg_byte=%u", (uint8_t)msg[i]);
+        output("data=%u", (uint8_t)msg[i]);
     }
 
     test_uart_send("A1V 60\r\n");
